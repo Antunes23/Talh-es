@@ -2,10 +2,10 @@
 
 /* 1. VARIÁVEIS DE COR E CONFIGURAÇÕES GLOBAIS */
 :root {
-  --cor-verde-escuro: #064e3b; /* Fundo da Sidebar */
-  --cor-verde-medio: #059669; /* Item ativo e ícones */
-  --cor-verde-claro: #d1fae5; /* Borda dos cards */
-  --cor-fundo-principal: #f9fafb; /* Fundo do conteúdo */
+  --cor-verde-escuro: #064e3b;
+  --cor-verde-medio: #059669;
+  --cor-verde-claro: #d1fae5;
+  --cor-fundo-principal: #f9fafb;
   --cor-fundo-card: #ffffff;
   --cor-texto-branco: #ffffff;
   --cor-texto-escuro: #1f2937;
@@ -27,7 +27,6 @@ body {
     sans-serif;
   display: flex;
   min-height: 100vh;
-  /* ATUALIZAÇÃO: Fundo do body vindo do seu CSS */
   background-color: rgb(232, 254, 236);
   color: var(--cor-texto-escuro);
 }
@@ -92,16 +91,13 @@ body {
   font-weight: 600;
 }
 
-/* Estilo .minhas do seu CSS */
 .nav-link.minhas {
   font-weight: 600;
   background-color: var(--cor-verde-medio);
 }
 
-/* ATUALIZAÇÃO: Adicionei o .painel que faltava */
 .nav-link.painel {
   font-weight: 600;
-  /* (Pode mudar a cor se quiser diferenciar) */
   background-color: var(--cor-verde-medio);
 }
 
@@ -164,7 +160,7 @@ body {
   cursor: pointer;
 }
 
-/* 4. ALERTA E CARDS (Estilos antigos) */
+/* 4. ALERTA E CARDS */
 .recommendation {
   padding: 1rem;
   background-color: var(--cor-alerta-fundo);
@@ -174,17 +170,11 @@ body {
   font-size: 0.9rem;
   margin-bottom: 2rem;
 }
-/* ... (Seus outros estilos .card) ... */
 
-/* ---------------------------------------------------- */
-/* 5. ATUALIZAÇÃO: ESTILOS DOS CARDS DE TALHÃO */
-/* ---------------------------------------------------- */
+/* 5. ESTILOS DOS CARDS DE TALHÃO (ALTERADO AQUI) */
 .plantations-grid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(300px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
 }
@@ -198,40 +188,77 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  position: relative;
+  position: relative; /* Essencial para os botões absolutos */
   overflow: hidden;
   min-height: 280px;
 }
+
+/* --- MUDANÇA: Cabeçalho Centralizado --- */
 .plantation-card-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Centraliza o texto */
   align-items: center;
   margin-bottom: 0.5rem;
+  margin-top: 1.5rem; /* Empurra o título para baixo para não bater nos botões */
 }
+
 .plantation-card-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--cor-texto-escuro);
+  text-align: center; /* Garante texto no centro */
 }
+
+/* --- MUDANÇA: Status no Canto Superior ESQUERDO --- */
 .plantation-card-status {
+  position: absolute;
+  top: 1rem;
+  left: 1rem; /* Fica na esquerda */
   background-color: #d1fae5;
   color: #065f46;
   font-weight: 600;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.85rem;
+  z-index: 5;
 }
+
+/* --- MUDANÇA: Lixeira no Canto Superior DIREITO --- */
+.delete-card-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem; /* Fica na direita */
+  left: auto;  /* Remove alinhamento antigo da esquerda */
+  background: none;
+  border: none;
+  color: var(--cor-texto-cinza);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  z-index: 10;
+}
+
+.delete-card-button:hover {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+/* ------------------------------------------------- */
+
 .plantation-card-variety {
   font-size: 0.95rem;
   color: var(--cor-texto-cinza);
   margin-bottom: 0.5rem;
 }
+
 .plantation-card-stage {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--cor-texto-escuro);
   margin-bottom: 0.5rem;
 }
+
 .progress-bar-container {
   width: 100%;
   height: 8px;
@@ -240,44 +267,35 @@ body {
   overflow: hidden;
   margin-bottom: 1rem;
 }
+
 .progress-bar {
   height: 100%;
   border-radius: 4px;
 }
-.progress-bar.red {
-  background-color: #ef4444;
-}
-.progress-bar.yellow {
-  background-color: #eab308;
-}
-.progress-bar.green {
-  background-color: #22c55e;
-}
+
+.progress-bar.red { background-color: #ef4444; }
+.progress-bar.yellow { background-color: #eab308; }
+.progress-bar.green { background-color: #22c55e; }
+
 .plantation-card-dates {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
   color: var(--cor-texto-cinza);
 }
+
 .plantation-card-alert {
   font-size: 0.9rem;
   color: #ef4444;
   font-weight: 500;
   margin-top: 0.75rem;
 }
-.plantation-card .plantation-card-status {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-}
 
-/* ---------------------------------------------------- */
-/* 6. ATUALIZAÇÃO: ESTILO DO CARD DE ADICIONAR (+) */
-/* ---------------------------------------------------- */
+/* 6. CARD DE ADICIONAR (+) */
 .add-plantation-card {
   min-height: 280px;
   border: 2px dashed var(--cor-verde-medio);
-  background-color: #f0fdf4; /* Fundo verde claro */
+  background-color: #f0fdf4;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -289,18 +307,18 @@ body {
   font-size: 1.1rem;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 .add-plantation-card i {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
+
 .add-plantation-card:hover {
   background-color: var(--cor-verde-claro);
   color: var(--cor-verde-escuro);
 }
 
-/* ---------------------------------------------------- */
-/* 7. ESTILOS DO SEU FORMULÁRIO (de .caixa-formulario) */
-/* ---------------------------------------------------- */
+/* 7. FORMULÁRIO */
 .caixa-formulario {
   background-color: #e6f1e6;
   border-radius: 12px;
@@ -315,7 +333,8 @@ body {
   font-size: 28px;
   font-weight: 700;
   color: #145a1b;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .formulario {
@@ -371,8 +390,7 @@ body {
 .botao-cancelar {
   background-color: #00b050;
   color: white;
-  /* Adicionado para o Link funcionar */
-  text-decoration: none; 
+  text-decoration: none;
   display: inline-block;
 }
 
@@ -385,13 +403,31 @@ body {
   opacity: 0.9;
 }
 
-/* ---------------------------------------------------- */
-/* 8. ATUALIZAÇÃO: TEXTO DE LOADING */
-/* ---------------------------------------------------- */
+/* 8. OUTROS */
 .loading-text {
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--cor-texto-cinza);
   text-align: center;
   margin-top: 4rem;
+}
+
+.plantations-grid-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.add-card-center {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.add-card-center .add-plantation-card {
+  width: 100%;
+  max-width: 400px;
+  min-height: 200px;
 }

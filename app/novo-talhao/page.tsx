@@ -1,20 +1,27 @@
+// app/novo-talhao/page.tsx
 "use client";
 
 import { useState } from "react";
-import Link from "next/link"; // ATUALIZAÇÃO: Importar o Link
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+
+const SUA_API_URL = 'http://localhost:8080/talhao';
 
 export default function NovoTalhao() {
+  const router = useRouter(); 
+  const [isLoading, setIsLoading] = useState(false); 
+
+  // Estado do formulário ALINHADO COM O JAVA
   const [form, setForm] = useState({
-    talhao: "",
+    nomeTalhao: "",      
     cultura: "",
     variedade: "",
-    estagio: "",
-    plantio: "",
-    colheita: "",
-    notas: "",
+    estagioIni: "",      
+    dataPlantio: "",     
+    dataColheita: "",    
+    notasAdicionais: "", 
   });
 
-  // ATUALIZAÇÃO: Função para lidar com a mudança nos inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -25,29 +32,58 @@ export default function NovoTalhao() {
     }));
   };
 
-  // ATUALIZAÇÃO: handleCancelar não é mais necessário,
-  // pois o botão "Cancelar" será um Link.
-  
-  // (Aqui você adicionaria sua função handleSubmit para salvar no MySQL)
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("Salvando no banco:", form);
-  //   // ...chamar sua API aqui...
-  // };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); 
+    setIsLoading(true); 
+
+    console.log("Enviando para o Spring Boot:", JSON.stringify(form));
+
+    try {
+      const response = await fetch(SUA_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form), 
+      });
+
+      if (!response.ok) {
+        // Tenta ler o erro como texto caso não seja JSON
+        const errorText = await response.text();
+        throw new Error(errorText || 'Falha ao salvar no backend.');
+      }
+
+      console.log('Salvo com sucesso!');
+      alert('Talhão salvo com sucesso!');
+      
+      router.push('/'); 
+
+    } catch (err) {
+        console.error("Erro completo:", err);
+        if (err instanceof Error) {
+            alert(`Erro ao salvar: ${err.message}`);
+        } else {
+            alert('Ocorreu um erro desconhecido ao salvar.');
+        }
+    } finally {
+      setIsLoading(false); 
+    }
+  };
 
   return (
     <div className="caixa-formulario">
-      <h2 className="titulo-formulario">Minhas Plantações</h2>
-      {/* ATUALIZAÇÃO: Adicionar o onSubmit no form */}
-      <form className="formulario" /* onSubmit={handleSubmit} */>
-        <label className="rotulo">Nome o talhão</label>
+      <h2 className="titulo-formulario">Adicionar Novo Talhão</h2>
+      
+      <form className="formulario" onSubmit={handleSubmit}>
+        <label className="rotulo">Nome do talhão</label>
         <input
           type="text"
-          name="talhao"
+          name="nomeTalhao"  // ESSENCIAL: Igual ao Java
           placeholder="Ex: Talhão 4"
           className="campo"
-          value={form.talhao}
-          onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+          value={form.nomeTalhao}
+          onChange={handleChange}
+          required 
         />
 
         <label className="rotulo">Cultura</label>
@@ -57,7 +93,8 @@ export default function NovoTalhao() {
           placeholder="Soja"
           className="campo"
           value={form.cultura}
-          onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+          onChange={handleChange}
+          required
         />
 
         <label className="rotulo">Variedade</label>
@@ -67,17 +104,19 @@ export default function NovoTalhao() {
           placeholder="Ex: BMX Potência RR"
           className="campo"
           value={form.variedade}
-          onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+          onChange={handleChange}
+          required
         />
 
         <label className="rotulo">Estágio Inicial</label>
         <input
           type="text"
-          name="estagio"
+          name="estagioIni" // ESSENCIAL: Igual ao Java
           placeholder="Floração"
           className="campo"
-          value={form.estagio}
-          onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+          value={form.estagioIni}
+          onChange={handleChange}
+          required
         />
 
         <div className="grupo-duplo">
@@ -85,10 +124,11 @@ export default function NovoTalhao() {
             <label className="rotulo">Data do Plantio</label>
             <input
               type="date"
-              name="plantio"
+              name="dataPlantio" // ESSENCIAL: Igual ao Java
               className="campo"
-              value={form.plantio}
-              onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+              value={form.dataPlantio}
+              onChange={handleChange}
+              required
             />
           </div>
 
@@ -96,31 +136,36 @@ export default function NovoTalhao() {
             <label className="rotulo">Data da Colheita</label>
             <input
               type="date"
-              name="colheita"
+              name="dataColheita" // ESSENCIAL: Igual ao Java
               className="campo"
-              value={form.colheita}
-              onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+              value={form.dataColheita}
+              onChange={handleChange}
+              required
             />
           </div>
         </div>
 
         <label className="rotulo">Notas adicionais</label>
         <textarea
-          name="notas"
+          name="notasAdicionais" // ESSENCIAL: Igual ao Java
           placeholder=""
           className="campo campo-texto"
           rows={4}
-          value={form.notas}
-          onChange={handleChange} // ATUALIZAÇÃO: Adicionado
+          value={form.notasAdicionais}
+          onChange={handleChange}
         ></textarea>
 
         <div className="botoes">
-          {/* ATUALIZAÇÃO: Botão Cancelar agora é um Link para a home */}
           <Link href="/" className="botao botao-cancelar">
             Cancelar
           </Link>
-          <button type="submit" className="botao botao-salvar">
-            Salvar
+          
+          <button 
+            type="submit" 
+            className="botao botao-salvar"
+            disabled={isLoading} 
+          >
+            {isLoading ? 'Salvando...' : 'Salvar'}
           </button>
         </div>
       </form>
